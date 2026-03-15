@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil F.O.R.M.E. - Formulaire Interactif</title>
+    <style>
+        :root {
+            --color-primary: #2180d1;
+            --color-primary-light: #e8f2ff;
+            --color-accent: #208080;
+            --color-text: #1a1a1a;
+            --color-border: #ddd;
+            --color-bg: #f9f9f9;
+            --color-success: #22a884;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--color-text);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            margin-top: 20px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .form-content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--color-primary-light);
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--color-text);
+            font-size: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-light);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group, .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input, .radio-item input {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+
+        .checkbox-item label, .radio-item label {
+            cursor: pointer;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .scale-group {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .scale-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .scale-row:last-child {
+            border-bottom: none;
+        }
+
+        .scale-label {
+            flex: 0 0 40%;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .scale-options {
+            flex: 1;
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .scale-option {
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--color-border);
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .scale-option:hover {
+            border-color: var(--color-primary);
+        }
+
+        .scale-option.selected {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .gift-card {
+            background: var(--color-bg);
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .gift-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(33, 128, 209, 0.15);
+        }
+
+        .gift-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        .gift-description {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .gift-crosses {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .cross-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--color-border);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .cross-btn:hover {
+            border-color: var(--color-primary);
+            background: var(--color-primary-light);
+        }
+
+        .cross-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .info-box {
+            background: var(--color-primary-light);
+            border-left: 4px solid var(--color-primary);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: var(--color-primary);
+        }
+
+        .nav-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: 1.5px solid #e53e3e;
+            color: #e53e3e;
+            opacity: 0.9;
+            margin-top: 48px;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #fff0f0;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-dummy {
+            cursor: default;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1a5fa8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 128, 209, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--color-bg);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .summary-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .summary-table td:first-child {
+            font-weight: 600;
+            width: 30%;
+            background: var(--color-bg);
+        }
+
+        .download-section {
+            background: var(--color-primary-light);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .download-section h3 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .form-content {
+                padding: 20px;
+            }
+
+            .gift-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-group, .radio-group {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>À la Découverte de Ma F.O.R.M.E.</h1>
+            <p>Profil personnel pour mieux servir le Seigneur</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="form-content">
+            <!-- SECTION 1: FORCES SPIRITUELLES -->
+            <div class="section active" data-section="1">
+                <h2 class="section-title">1. Forces Spirituelles</h2>
+                <p class="section-subtitle">Identifiez vos dons en mettant 1, 2 ou 3 croix face à chaque don</p>
+
+                <div class="info-box">
+                    <strong>Comment remplir :</strong> Après avoir demandé au Seigneur de vous éclairer, cochez chaque don selon ce que vous reconnaissez avoir reçu. Mettez plusieurs croix pour les dons les plus évidents.
+                </div>
+
+                <div class="gift-grid">
+                    <!-- DONS POUR COMMUNIQUER -->
+                    <div class="gift-card">
+                        <div class="gift-name">1. Évangélisation</div>
+                        <div class="gift-description">Partager la Bonne Nouvelle de manière positive et amener à la foi.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-1', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-1', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-1', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">2. Discernement</div>
+                        <div class="gift-description">Distinguer l'esprit de vérité de l'erreur.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-2', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-2', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-2', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">3. Apostolat</div>
+                        <div class="gift-description">Faire advenir le royaume de Dieu dans le monde.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-3', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-3', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-3', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">4. Mission</div>
+                        <div class="gift-description">S'adapter à une culture différente pour atteindre les non-croyants.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-4', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-4', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-4', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <!-- DONS POUR ENSEIGNER -->
+                    <div class="gift-card">
+                        <div class="gift-name">5. Enseignement</div>
+                        <div class="gift-description">Éduquer clairement le peuple de Dieu en expliquant la Bible.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-5', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-5', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-5', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">6. Encouragement</div>
+                        <div class="gift-description">Motiver les autres chrétiens à agir selon les principes évangéliques.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-6', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-6', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-6', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">7. Sagesse</div>
+                        <div class="gift-description">Comprendre comment Dieu voit les situations de la vie.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-7', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-7', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-7', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <!-- DONS POUR MANIFESTER L'AMOUR -->
+                    <div class="gift-card">
+                        <div class="gift-name">8. Service</div>
+                        <div class="gift-description">Reconnaître les besoins et y répondre joyeusement sans attendre.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-8', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-8', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-8', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">9. Miséricorde</div>
+                        <div class="gift-description">Manifester l'amour envers les membres souffrants du corps de Christ.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-9', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-9', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-9', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">10. Générosité</div>
+                        <div class="gift-description">Contribuer généreusement aux besoins matériels de l'église.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-10', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-10', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-10', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <!-- DONS POUR ACCUEILLIR -->
+                    <div class="gift-card">
+                        <div class="gift-name">11. Hospitalité</div>
+                        <div class="gift-description">Accueillir les autres afin qu'ils se sentent bienvenus dans l'église.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-11', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-11', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-11', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <!-- DONS POUR CÉLÉBRER -->
+                    <div class="gift-card">
+                        <div class="gift-name">12. Foi</div>
+                        <div class="gift-description">Faire confiance à Dieu et agir sans crainte selon ses promesses.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-12', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-12', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-12', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">13. Don des Langues</div>
+                        <div class="gift-description">Prier dans une langue comprise uniquement par Dieu.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-13', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-13', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-13', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">14. Connaissance</div>
+                        <div class="gift-description">Entendre des messages de connaissance venant de Dieu.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-14', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-14', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-14', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">15. Prophétie</div>
+                        <div class="gift-description">Apporter les messages de Dieu qui réconfortent et encouragent.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-15', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-15', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-15', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">16. Louange</div>
+                        <div class="gift-description">Célébrer la présence de Dieu par la musique ou le chant.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-16', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-16', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-16', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">17. Intercession</div>
+                        <div class="gift-description">Prier fidèlement pour les besoins des frères et sœurs.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-17', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-17', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-17', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">18. Miracles</div>
+                        <div class="gift-description">Prier avec foi pour l'intervention divine dans les situations impossibles.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-18', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-18', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-18', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">19. Guérison</div>
+                        <div class="gift-description">Prier avec foi pour la guérison physique, émotionnelle ou spirituelle.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-19', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-19', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-19', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <!-- DONS POUR CONDUIRE -->
+                    <div class="gift-card">
+                        <div class="gift-name">20. Berger</div>
+                        <div class="gift-description">Être attentif aux besoins spirituels d'un groupe de chrétiens.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-20', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-20', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-20', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">21. Direction</div>
+                        <div class="gift-description">Communiquer clairement l'objectif et la vision d'un ministère.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-21', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-21', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-21', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+
+                    <div class="gift-card">
+                        <div class="gift-name">22. Gestion</div>
+                        <div class="gift-description">Organiser et gérer les gens, ressources et temps du ministère.</div>
+                        <div class="gift-crosses">
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-22', '1')">✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-22', '2')">✓✓</button>
+                            <button class="cross-btn" onclick="toggleCross(this, 'don-22', '3')">✓✓✓</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mes dons principaux :</label>
+                    <div id="dons-principaux" style="padding: 15px; background: var(--color-primary-light); border-radius: 6px; min-height: 50px;">
+                        <p style="color: #666; font-style: italic; margin: 0;"></p>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" disabled>← Précédent</button>
+                       
+                    </div>
+                    <button class="btn btn-primary" onclick="nextSection()">Suivant →</button>
+                </div>
+                <button class="btn-reset" onclick="resetForm()">↺ Réinitialiser le formulaire</button>
+            </div>
+
+            <!-- SECTION 2: ORIENTATION DU CŒUR -->
+            <div class="section" data-section="2">
+                <h2 class="section-title">2. Orientation du Cœur</h2>
+                <p class="section-subtitle">Découvrez votre passion et ce qui vous motive vraiment</p>
+
+                <div class="form-group">
+                    <label class="form-label">Qu'avez-vous aimé faire dans votre enfance/adolescence ?</label>
+                    <textarea id="coeur-enfance" class="form-control" placeholder="Décrivez les moments forts..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Vos passions entre 20 et 40 ans :</label>
+                    <textarea id="coeur-adulte" class="form-control" placeholder="Ce qui vous a motivé..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Vos penchants actuels (ce qui vous motive le plus) :</label>
+                    <textarea id="coeur-actuel" class="form-control" placeholder="J'aime... J'aime... J'aime..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Avec quels groupes de personnes aimez-vous servir ?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-enfants" name="groupe">
+                            <label for="groupe-enfants">Jeunes enfants</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-4-8" name="groupe">
+                            <label for="groupe-4-8">Enfants 4-8 ans</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-ados" name="groupe">
+                            <label for="groupe-ados">Adolescents</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-jeunes" name="groupe">
+                            <label for="groupe-jeunes">Jeunes adultes</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-adultes" name="groupe">
+                            <label for="groupe-adultes">Adultes</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-seniors" name="groupe">
+                            <label for="groupe-seniors">Personnes âgées</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-femmes" name="groupe">
+                            <label for="groupe-femmes">Femmes</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-hommes" name="groupe">
+                            <label for="groupe-hommes">Hommes</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-families" name="groupe">
+                            <label for="groupe-families">Familles</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="groupe-malades" name="groupe">
+                            <label for="groupe-malades">Personnes malades</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Quels ministères vous interpellent le plus ?</label>
+                    <textarea id="ministeres" class="form-control" placeholder="Les besoins et activités qui vous motivent..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Si vous étiez sûr de réussir, que feriez-vous pour Dieu ?</label>
+                    <textarea id="reve" class="form-control" placeholder="Votre vision, vos rêves de ministère..."></textarea>
+                </div>
+
+                <div class="navigation">
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" onclick="previousSection()">← Précédent</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextSection()">Suivant →</button>
+                </div>
+                <button class="btn-reset" onclick="resetForm()">↺ Réinitialiser le formulaire</button>
+            </div>
+
+            <!-- SECTION 3: RESSOURCES & COMPÉTENCES -->
+            <div class="section" data-section="3">
+                <h2 class="section-title">3. Ressources & Compétences</h2>
+                <p class="section-subtitle">Identifiez vos expériences et savoir-faire</p>
+
+                <div class="form-group">
+                    <label class="form-label">Quel est votre ministère principal actuel ?</label>
+                    <textarea type="text" class="form-control" id="ministere-principal" placeholder="Décrivez votre rôle actuel..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Vos domaines d'expérience :</label>
+                    <textarea id="experience-domaines" class="form-control" placeholder="Listez les domaines..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Vos compétences développées :</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-divertir" name="competence">
+                            <label for="comp-divertir">Divertir</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-recruter" name="competence">
+                            <label for="comp-recruter">Recruter</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-interviewer" name="competence">
+                            <label for="comp-interviewer">Interviewer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-rechercher" name="competence">
+                            <label for="comp-rechercher">Rechercher</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-decorer" name="competence">
+                            <label for="comp-decorer">Décorer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-representer" name="competence">
+                            <label for="comp-representer">Représenter</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-evaluer" name="competence">
+                            <label for="comp-evaluer">Évaluer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-planifier" name="competence">
+                            <label for="comp-planifier">Planifier</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-diriger" name="competence">
+                            <label for="comp-diriger">Diriger</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-conseiller" name="competence">
+                            <label for="comp-conseiller">Conseiller</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-enseigner" name="competence">
+                            <label for="comp-enseigner">Enseigner</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-ecrire" name="competence">
+                            <label for="comp-ecrire">Écrire</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-editer" name="competence">
+                            <label for="comp-editer">Éditer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-promouvoir" name="competence">
+                            <label for="comp-promouvoir">Promouvoir</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-reparer" name="competence">
+                            <label for="comp-reparer">Réparer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-cuisiner" name="competence">
+                            <label for="comp-cuisiner">Cuisiner</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-souvenir" name="competence">
+                            <label for="comp-souvenir">Se souvenir</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-machines" name="competence">
+                            <label for="comp-machines">Machines/Outils</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-plans" name="competence">
+                            <label for="comp-plans">Trouver les bons plans</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-compter" name="competence">
+                            <label for="comp-compter">Compter/Finances</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-classer" name="competence">
+                            <label for="comp-classer">Classer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-accueillir" name="competence">
+                            <label for="comp-accueillir">Accueillir</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-composer" name="competence">
+                            <label for="comp-composer">Composer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-jardiner" name="competence">
+                            <label for="comp-jardiner">Jardiner</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-creer" name="competence">
+                            <label for="comp-creer">Créer</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-embellir" name="competence">
+                            <label for="comp-embellir">Embellir</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="comp-musique" name="competence">
+                            <label for="comp-musique">Musique/Louange</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Votre meilleur atout :</label>
+                    <input type="text" class="form-control" id="atout-principal" placeholder="Ce en quoi vous excellez vraiment...">
+                </div>
+
+                <div class="navigation">
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" onclick="previousSection()">← Précédent</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextSection()">Suivant →</button>
+                </div>
+                <button class="btn-reset" onclick="resetForm()">↺ Réinitialiser le formulaire</button>
+            </div>
+
+            <!-- SECTION 4: MANIÈRE D'ÊTRE -->
+            <div class="section" data-section="4">
+                <h2 class="section-title">4. Manière d'Être</h2>
+                <p class="section-subtitle">Identifiez votre profil de personnalité DISC</p>
+
+                <div class="info-box">
+                    <strong>Instructions :</strong> Évaluez chaque affirmation de 1 (Jamais) à 5 (Toujours). Il n'y a pas de bon ou mauvais profil — nous avons tous besoin des uns et des autres !
+                </div>
+
+                <h3 style="color: var(--color-primary); margin-top: 30px;">Section D — Traits Dominants</h3>
+                <div class="scale-group">
+                    <div class="scale-row">
+                        <div class="scale-label">Je suis ferme, exigeant et décisif</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d1', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d1', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d1', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d1', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d1', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">J'aime faire plusieurs tâches en même temps</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d2', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d2', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d2', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d2', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d2', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je réussis dans un environnement rempli de défis</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d3', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d3', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d3', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d3', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d3', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je pense aux tâches avant aux autres</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d4', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d4', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d4', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d4', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d4', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je suis motivé par les accomplissements</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d5', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d5', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d5', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d5', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-d5', 5)">5</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin: 10px 0; padding: 10px; background: var(--color-bg); border-radius: 4px;">
+                    <strong>Total D :</strong> <span id="total-d">0</span>
+                </div>
+
+                <h3 style="color: var(--color-primary); margin-top: 30px;">Section I — Traits Influents</h3>
+                <div class="scale-group">
+                    <div class="scale-row">
+                        <div class="scale-label">J'aime influencer et inspirer les gens</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i1', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i1', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i1', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i1', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i1', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">J'ai une opinion positive des gens</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i2', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i2', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i2', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i2', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i2', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je suis le clou de la soirée</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i3', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i3', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i3', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i3', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i3', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je pense à motiver les gens</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i4', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i4', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i4', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i4', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i4', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je suis motivé par l'approbation</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i5', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i5', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i5', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i5', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-i5', 5)">5</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin: 10px 0; padding: 10px; background: var(--color-bg); border-radius: 4px;">
+                    <strong>Total I :</strong> <span id="total-i">0</span>
+                </div>
+
+                <h3 style="color: var(--color-primary); margin-top: 30px;">Section S — Traits Stables</h3>
+                <div class="scale-group">
+                    <div class="scale-row">
+                        <div class="scale-label">Je réussis dans des milieux structurés</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s1', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s1', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s1', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s1', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s1', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">J'aime ce qui est précis</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s2', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s2', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s2', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s2', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s2', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">J'aime les petits groupes</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s3', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s3', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s3', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s3', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s3', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je préfère être membre d'équipe</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s4', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s4', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s4', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s4', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s4', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je suis motivé par la stabilité</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s5', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s5', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s5', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s5', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-s5', 5)">5</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin: 10px 0; padding: 10px; background: var(--color-bg); border-radius: 4px;">
+                    <strong>Total S :</strong> <span id="total-s">0</span>
+                </div>
+
+                <h3 style="color: var(--color-primary); margin-top: 30px;">Section C — Traits Consciencieux</h3>
+                <div class="scale-group">
+                    <div class="scale-row">
+                        <div class="scale-label">Je ne prends pas de gros risques</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c1', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c1', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c1', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c1', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c1', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">J'aime les tâches et les détails</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c2', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c2', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c2', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c2', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c2', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">J'ai souvent raison</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c3', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c3', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c3', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c3', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c3', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je me conforme à des règles claires</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c4', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c4', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c4', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c4', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c4', 5)">5</button>
+                        </div>
+                    </div>
+                    <div class="scale-row">
+                        <div class="scale-label">Je suis motivé par la qualité</div>
+                        <div class="scale-options">
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c5', 1)">1</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c5', 2)">2</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c5', 3)">3</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c5', 4)">4</button>
+                            <button class="scale-option" onclick="selectScale(this, 'disc-c5', 5)">5</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin: 10px 0; padding: 10px; background: var(--color-bg); border-radius: 4px;">
+                    <strong>Total C :</strong> <span id="total-c">0</span>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: var(--color-primary-light); border-radius: 8px;">
+                    <h3 style="margin-top: 0; color: var(--color-primary);">Mon profil DISC</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        <button class="btn btn-dummy" id="btn-d" style="background: white; border: 2px solid var(--color-border); color: var(--color-primary); font-weight: bold; font-size: 18px;">D</button>
+                        <button class="btn" id="btn-i" style="background: white; border: 2px solid var(--color-border); color: var(--color-primary); font-weight: bold; font-size: 18px;">I</button>
+                        <button class="btn" id="btn-s" style="background: white; border: 2px solid var(--color-border); color: var(--color-primary); font-weight: bold; font-size: 18px;">S</button>
+                        <button class="btn" id="btn-c" style="background: white; border: 2px solid var(--color-border); color: var(--color-primary); font-weight: bold; font-size: 18px;">C</button>
+                    </div>
+                </div>
+
+                <div id="disc-description" style="display:none; margin-top:20px; padding:16px; background:var(--color-primary-light); border-radius:8px; border-left:4px solid var(--color-primary); font-size:14px; line-height:1.6;"></div>
+
+                <div class="navigation">
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" onclick="previousSection()">← Précédent</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextSection()">Suivant →</button>
+                </div>
+                <button class="btn-reset" onclick="resetForm()">↺ Réinitialiser le formulaire</button>     
+            </div>
+
+            <!-- SECTION 5: EXPÉRIENCES -->
+            <div class="section" data-section="5">
+                <h2 class="section-title">5. Expériences</h2>
+                <p class="section-subtitle">Vos moments forts et apprentissages</p>
+
+                <div class="form-group">
+                    <label class="form-label">Votre conversion chrétienne et son impact sur votre vie :</label>
+                    <textarea id="exp-spirituelle" class="form-control" placeholder="Comment êtes-vous devenu chrétien et qu'a changé cela..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Moments où vous vous êtes senti particulièrement proche de Dieu :</label>
+                    <textarea id="exp-proche" class="form-control" placeholder="Vos expériences spirituelles marquantes..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Épreuves surmontées et enseignements tirés :</label>
+                    <textarea id="exp-epreuves" class="form-control" placeholder="Les défis qui vous ont changé..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Vos matières préférées à l'école :</label>
+                    <textarea class="form-control" id="exp-education" placeholder="Listez vos sujets favoris..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Emplois où vous vous êtes épanoui(e) :</label>
+                    <textarea id="exp-travail" class="form-control" placeholder="Les rôles et métiers qui vous ont satisfait..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Votre engagement dans l'Église jusqu'à maintenant :</label>
+                    <textarea id="exp-eglise" class="form-control" placeholder="Vos rôles, services et responsabilités..."></textarea>
+                </div>
+
+                <div class="navigation">
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" onclick="previousSection()">← Précédent</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextSection()">Suivant →</button>
+                </div>
+                <button class="btn-reset" onclick="resetForm()">↺ Réinitialiser le formulaire</button>
+            </div>
+
+            <!-- SECTION 6: RÉSUMÉ -->
+            <div class="section" data-section="6">
+                <h2 class="section-title">6. Mon Profil F.O.R.M.E.</h2>
+                <p class="section-subtitle">Synthèse de votre découverte personnelle</p>
+
+                <div id="resume-content" style="background: var(--color-bg); padding: 25px; border-radius: 8px; line-height: 1.8;">
+                    <h3 style="color: var(--color-primary);">Forces Spirituelles</h3>
+                    <div id="resume-forces"></div>
+
+                    <h3 style="color: var(--color-primary); margin-top: 30px;">Orientation du Cœur</h3>
+                    <div id="resume-coeur"></div>
+
+                    <h3 style="color: var(--color-primary); margin-top: 30px;">Ressources & Compétences</h3>
+                    <div id="resume-ressources"></div>
+
+                    <h3 style="color: var(--color-primary); margin-top: 30px;">Manière d'Être</h3>
+                    <div id="resume-personnalite"></div>
+
+                    <h3 style="color: var(--color-primary); margin-top: 30px;">Expériences</h3>
+                    <div id="resume-experiences"></div>
+                </div>
+
+                <div class="download-section">
+                    <h3>Télécharger vos résultats</h3>
+                    <p>Vos réponses sont sauvegardées dans votre navigateur. Téléchargez un résumé de votre profil :</p>
+                    <button class="btn btn-primary" onclick="downloadResults()">⬇ Télécharger en PDF</button>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: var(--color-primary-light); border-radius: 8px; text-align: center;">
+                    <p style="font-style: italic; color: var(--color-primary);">« Comme de bons intendants des diverses grâces de Dieu, mettez chacun au service des autres le don que vous avez reçu. »</p>
+                    <p style="font-weight: bold;">1 Pierre 4.10</p>
+                </div>
+
+                <div class="navigation">
+                    <div class="nav-left">
+                        <button class="btn btn-secondary" onclick="previousSection()">← Précédent</button>
+                    </div>
+                    <button class="btn btn-primary" style="background: var(--color-success);" onclick="submitForm()">✓ Terminer</button>
+                </div>
+                <button class="btn-reset" onclick="resetForm()">↺ Réinitialiser le formulaire</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        let formData = {
+            don1: 0, don2: 0, don3: 0, don4: 0, don5: 0, don6: 0, don7: 0, don8: 0, don9: 0, don10: 0,
+            don11: 0, don12: 0, don13: 0, don14: 0, don15: 0, don16: 0, don17: 0, don18: 0, don19: 0, don20: 0, don21: 0, don22: 0,
+            disc: {}
+        };
+
+        const donNames = {
+            'don-1': 'Évangélisation',
+            'don-2': 'Discernement',
+            'don-3': 'Apostolat',
+            'don-4': 'Mission',
+            'don-5': 'Enseignement',
+            'don-6': 'Encouragement',
+            'don-7': 'Sagesse',
+            'don-8': 'Service',
+            'don-9': 'Miséricorde',
+            'don-10': 'Générosité',
+            'don-11': 'Hospitalité',
+            'don-12': 'Foi',
+            'don-13': 'Don des Langues',
+            'don-14': 'Connaissance',
+            'don-15': 'Prophétie',
+            'don-16': 'Louange',
+            'don-17': 'Intercession',
+            'don-18': 'Miracles',
+            'don-19': 'Guérison',
+            'don-20': 'Berger',
+            'don-21': 'Direction',
+            'don-22': 'Gestion'
+        };
+
+        const discDescriptions = {
+            D: {
+                titre: 'Profil D — Dominant, Direct, Orienté Tâche',
+                traits: 'Décisif, organisé, extraverti, franc',
+                opportunites: [
+                    'Écoutez les autres plus attentivement',
+                    'Soyez moins contrôlant',
+                    "Développez l'appréciation des opinions des autres",
+                    'Investissez dans vos relations personnelles',
+                    'Manifestez votre soutien à votre équipe'
+                ]
+            },
+            I: {
+                titre: 'Profil I — Influent, Intéressé aux Autres',
+                traits: 'Amusant, décontracté, sociable, orienté vers les autres',
+                opportunites: [
+                    'Pesez le pour et le contre avant de décider',
+                    'Aidez les autres dans leurs tâches',
+                    'Exercez du contrôle sur vos actions et paroles',
+                    'Concentrez-vous sur les détails et les faits',
+                    'Ralentissez pour les autres',
+                    'Écoutez plus, parlez moins'
+                ]
+            },
+            S: {
+                titre: 'Profil S — Stable, Constant, Analytique',
+                traits: 'Orienté vers les gens, introverti, fiable',
+                opportunites: [
+                    'Considérez le changement comme sain',
+                    'Soyez plus direct dans vos interactions',
+                    'Concentrez-vous sur des buts plus larges',
+                    'Affrontez les conflits de manière constructive',
+                    "Démontrez plus d'initiative"
+                ]
+            },
+            C: {
+                titre: 'Profil C — Consciencieux, Compétent, Orienté Tâche',
+                traits: 'Orienté sur les buts, introverti, minutieux',
+                opportunites: [
+                    'Faites les bonnes choses, pas seulement les faire correctement',
+                    'Soyez moins critique des idées des autres',
+                    'Aidez les autres à atteindre leurs buts',
+                    'Construisez des relations',
+                    'Soyez plus décisif',
+                    'Concentrez-vous moins sur les faits, plus sur les gens'
+                ]
+            }
+        };
+
+        function buildDiscDescriptionHTML(profiles) {
+            if (!profiles || profiles.length === 0) return '';
+            return profiles.map(p => {
+                const d = discDescriptions[p];
+                if (!d) return '';
+                return `<div style="margin-bottom:16px;">
+                    <p style="font-weight:bold;color:var(--color-primary);margin:0 0 4px 0;">${d.titre}</p>
+                    <p style="margin:0 0 6px 0;"><em>Traits : ${d.traits}</em></p>
+                    <p style="font-weight:bold;margin:0 0 4px 0;">Opportunités de croissance :</p>
+                    <ul style="margin:0;padding-left:20px;">
+                        ${d.opportunites.map(o => `<li>${o}</li>`).join('')}
+                    </ul>
+                </div>`;
+            }).join('<hr style="border:none;border-top:1px solid var(--color-border);margin:12px 0;">');
+        }
+
+        function updateDiscDescription() {
+            const el = document.getElementById('disc-description');
+            if (!el) return;
+            const profiles = (formData.profile || '').split('/').filter(Boolean);
+            if (profiles.length === 0) {
+                el.innerHTML = '';
+                el.style.display = 'none';
+                return;
+            }
+            el.innerHTML = buildDiscDescriptionHTML(profiles);
+            el.style.display = 'block';
+        }
+
+        function showSection(num) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-section="${num}"]`).classList.add('active');
+            
+            const progress = (num / 6) * 100;
+            document.querySelector('.progress-fill').style.width = progress + '%';
+            
+            window.scrollTo(0, 0);
+        }
+
+        function nextSection() {
+            if (currentSection < 6) {
+                currentSection++;
+                showSection(currentSection);
+                // Si on arrive à la section 6 (résumé), générer le résumé
+                if (currentSection === 6) {
+                    generateSummary();
+                }
+            }
+        }
+
+        function previousSection() {
+            if (currentSection > 1) {
+                currentSection--;
+                showSection(currentSection);
+            }
+        }
+
+        function toggleCross(btn, donId, value) {
+            const siblings = btn.parentElement.querySelectorAll('button');
+            siblings.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            formData[donId] = value;
+            updateDonsPrincipaux();
+            saveFormData();
+        }
+
+        function updateDonsPrincipaux() {
+            const donsPrincipaux = [];
+            Object.keys(formData).forEach(key => {
+                if (key.startsWith('don-') && formData[key] === '3') {
+                    donsPrincipaux.push(donNames[key]);
+                }
+            });
+
+            const container = document.getElementById('dons-principaux');
+            if (donsPrincipaux.length > 0) {
+                const listHTML = '<ul style="margin: 0; padding-left: 20px; color: var(--color-text);">' +
+                    donsPrincipaux.map(don => `<li style="margin: 8px 0; font-weight: 500;">${don}</li>`).join('') +
+                    '</ul>';
+                container.innerHTML = listHTML;
+            } else {
+                container.innerHTML = '<p style="color: #666; font-style: italic; margin: 0;"></p>';
+            }
+        }
+
+        function selectScale(btn, id, value) {
+            btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            formData[id] = value;
+            updateDiscTotals();
+            saveFormData();
+        }
+
+        function updateDiscTotals() {
+            const discD = (formData['disc-d1'] || 0) + (formData['disc-d2'] || 0) + (formData['disc-d3'] || 0) + (formData['disc-d4'] || 0) + (formData['disc-d5'] || 0);
+            const discI = (formData['disc-i1'] || 0) + (formData['disc-i2'] || 0) + (formData['disc-i3'] || 0) + (formData['disc-i4'] || 0) + (formData['disc-i5'] || 0);
+            const discS = (formData['disc-s1'] || 0) + (formData['disc-s2'] || 0) + (formData['disc-s3'] || 0) + (formData['disc-s4'] || 0) + (formData['disc-s5'] || 0);
+            const discC = (formData['disc-c1'] || 0) + (formData['disc-c2'] || 0) + (formData['disc-c3'] || 0) + (formData['disc-c4'] || 0) + (formData['disc-c5'] || 0);
+
+            document.getElementById('total-d').textContent = discD;
+            document.getElementById('total-i').textContent = discI;
+            document.getElementById('total-s').textContent = discS;
+            document.getElementById('total-c').textContent = discC;
+
+            formData.discTotals = { D: discD, I: discI, S: discS, C: discC };
+
+            // Sélectionner automatiquement le(s) profil(s) avec le score le plus élevé
+            autoSelectDiscProfile();
+        }
+
+        function autoSelectDiscProfile() {
+            if (!formData.discTotals) return;
+
+            const totals = formData.discTotals;
+            const maxScore = Math.max(totals.D, totals.I, totals.S, totals.C);
+
+            // Si le score max est 0, ne rien sélectionner
+            if (maxScore === 0) {
+                resetAllProfiles();
+                return;
+            }
+
+            // Trouver tous les profils avec le score maximum
+            const topProfiles = [];
+            if (totals.D === maxScore) topProfiles.push('D');
+            if (totals.I === maxScore) topProfiles.push('I');
+            if (totals.S === maxScore) topProfiles.push('S');
+            if (totals.C === maxScore) topProfiles.push('C');
+
+            // Réinitialiser tous les boutons
+            resetAllProfiles();
+
+            // Sélectionner tous les profils avec le score maximum
+            topProfiles.forEach(profile => {
+                selectProfile(profile, true);
+            });
+
+            // Sauvegarder les profils sélectionnés
+            formData.profile = topProfiles.join('/');
+            updateDiscDescription();
+        }
+
+        function resetAllProfiles() {
+            ['d', 'i', 's', 'c'].forEach(p => {
+                const btn = document.getElementById('btn-' + p);
+                btn.style.background = 'white';
+                btn.style.color = 'var(--color-primary)';
+            });
+        }
+
+        function selectProfile(profile, autoSelect = false) {
+            const btn = document.getElementById('btn-' + profile.toLowerCase());
+
+            if (!autoSelect) {
+                // Mode manuel : désélectionner tous et sélectionner celui cliqué
+                resetAllProfiles();
+                btn.style.background = 'var(--color-primary)';
+                btn.style.color = 'white';
+                formData.profile = profile;
+                updateDiscDescription();
+                saveFormData();
+            } else {
+                // Mode automatique : permettre la sélection multiple
+                btn.style.background = 'var(--color-primary)';
+                btn.style.color = 'white';
+            }
+        }
+
+        function generateSummary() {
+            // FORCES SPIRITUELLES
+            const donsPrincipaux = [];
+            Object.keys(formData).forEach(key => {
+                if (key.startsWith('don-') && formData[key] === '3') {
+                    donsPrincipaux.push(donNames[key]);
+                }
+            });
+
+            let forcesHTML = '<p><strong>Mes dons principaux :</strong></p>';
+            if (donsPrincipaux.length > 0) {
+                forcesHTML += '<ul style="margin: 10px 0; padding-left: 20px;">';
+                donsPrincipaux.forEach(don => {
+                    forcesHTML += `<li style="margin: 5px 0;">${don}</li>`;
+                });
+                forcesHTML += '</ul>';
+            } else {
+                forcesHTML += '<p style="color: #666; font-style: italic;">Aucun don avec 3 croix sélectionné</p>';
+            }
+            document.getElementById('resume-forces').innerHTML = forcesHTML;
+
+            // ORIENTATION DU CŒUR
+            const coeurEnfance = document.getElementById('coeur-enfance').value;
+            const coeurAdulte = document.getElementById('coeur-adulte').value;
+            const coeurActuel = document.getElementById('coeur-actuel').value;
+            const groupesChecked = Array.from(document.querySelectorAll('input[name="groupe"]:checked'))
+                .map(cb => cb.nextElementSibling.textContent);
+            const ministeres = document.getElementById('ministeres').value;
+            const reve = document.getElementById('reve').value;
+
+            let coeurHTML = '';
+            if (coeurEnfance) coeurHTML += `<p><strong>Enfance/Adolescence :</strong><br>${coeurEnfance}</p>`;
+            if (coeurAdulte) coeurHTML += `<p><strong>Entre 20 et 40 ans :</strong><br>${coeurAdulte}</p>`;
+            if (coeurActuel) coeurHTML += `<p><strong>Actuellement :</strong><br>${coeurActuel}</p>`;
+            if (groupesChecked.length > 0) {
+                coeurHTML += `<p><strong>Groupes de personnes :</strong><br>${groupesChecked.join(', ')}</p>`;
+            }
+            if (ministeres) coeurHTML += `<p><strong>Ministères qui m'interpellent :</strong><br>${ministeres}</p>`;
+            if (reve) coeurHTML += `<p><strong>Mon rêve pour Dieu :</strong><br>${reve}</p>`;
+
+            document.getElementById('resume-coeur').innerHTML = coeurHTML || '<p style="color: #666; font-style: italic;">Aucune information renseignée</p>';
+
+            // RESSOURCES & COMPÉTENCES
+            const ministèrePrincipal = document.getElementById('ministere-principal').value;
+            const experienceDomaines = document.getElementById('experience-domaines').value;
+            const competencesChecked = Array.from(document.querySelectorAll('input[name="competence"]:checked'))
+                .map(cb => cb.nextElementSibling.textContent);
+            const atoutPrincipal = document.getElementById('atout-principal').value;
+
+            let ressourcesHTML = '';
+            if (ministèrePrincipal) ressourcesHTML += `<p><strong>Ministère principal actuel :</strong><br>${ministèrePrincipal}</p>`;
+            if (experienceDomaines) ressourcesHTML += `<p><strong>Domaines d'expérience :</strong><br>${experienceDomaines}</p>`;
+            if (competencesChecked.length > 0) {
+                ressourcesHTML += `<p><strong>Compétences développées :</strong><br>${competencesChecked.join(', ')}</p>`;
+            }
+            if (atoutPrincipal) ressourcesHTML += `<p><strong>Meilleur atout :</strong><br>${atoutPrincipal}</p>`;
+
+            document.getElementById('resume-ressources').innerHTML = ressourcesHTML || '<p style="color: #666; font-style: italic;">Aucune information renseignée</p>';
+
+            // MANIÈRE D'ÊTRE (DISC)
+            const discTotals = formData.discTotals || { D: 0, I: 0, S: 0, C: 0 };
+            const profileSelected = formData.profile || 'Non déterminé';
+
+            const topProfiles = profileSelected !== 'Non déterminé' ? profileSelected.split('/') : [];
+            let personnaliteHTML = '';
+            if (topProfiles.length > 0) {
+                personnaliteHTML += buildDiscDescriptionHTML(topProfiles);
+            } else {
+                personnaliteHTML = '<p style="color:#666;font-style:italic;">Profil non déterminé</p>';
+            }
+
+            document.getElementById('resume-personnalite').innerHTML = personnaliteHTML;
+
+            // EXPÉRIENCES
+            const expSpirituelle = document.getElementById('exp-spirituelle').value;
+            const expProche = document.getElementById('exp-proche').value;
+            const expEpreuves = document.getElementById('exp-epreuves').value;
+            const expEducation = document.getElementById('exp-education').value;
+            const expTravail = document.getElementById('exp-travail').value;
+            const expEglise = document.getElementById('exp-eglise').value;
+
+            let experiencesHTML = '';
+            if (expSpirituelle) experiencesHTML += `<p><strong>Ma conversion :</strong><br>${expSpirituelle}</p>`;
+            if (expProche) experiencesHTML += `<p><strong>Moments proches de Dieu :</strong><br>${expProche}</p>`;
+            if (expEpreuves) experiencesHTML += `<p><strong>Épreuves surmontées :</strong><br>${expEpreuves}</p>`;
+            if (expEducation) experiencesHTML += `<p><strong>Matières préférées :</strong><br>${expEducation}</p>`;
+            if (expTravail) experiencesHTML += `<p><strong>Emplois épanouissants :</strong><br>${expTravail}</p>`;
+            if (expEglise) experiencesHTML += `<p><strong>Engagement dans l'Église :</strong><br>${expEglise}</p>`;
+
+            document.getElementById('resume-experiences').innerHTML = experiencesHTML || '<p style="color: #666; font-style: italic;">Aucune information renseignée</p>';
+        }
+
+        function downloadResults() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+            const timestamp = new Date().toLocaleDateString('fr-FR');
+            const pageW = doc.internal.pageSize.getWidth();
+            const margin = 15;
+            const contentW = pageW - margin * 2;
+            let y = 20;
+
+            const checkPage = (needed = 10) => {
+                if (y + needed > 280) { doc.addPage(); y = 15; }
+            };
+
+            const addSection = (title) => {
+                checkPage(14);
+                doc.setFillColor(33, 128, 209);
+                doc.rect(margin, y, contentW, 7, 'F');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(255, 255, 255);
+                doc.text(title.toUpperCase(), margin + 3, y + 5);
+                doc.setTextColor(34, 34, 34);
+                y += 10;
+            };
+
+            const addRow = (label, value) => {
+                const text = value || 'Non renseigné';
+                const lines = doc.splitTextToSize(text, contentW - 65);
+                const rowH = Math.max(8, lines.length * 5 + 3);
+                checkPage(rowH);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(68, 68, 68);
+                doc.text(label, margin, y + 5);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(value ? 34 : 153, value ? 34 : 153, value ? 34 : 153);
+                doc.text(lines, margin + 62, y + 5);
+                doc.setDrawColor(220, 220, 220);
+                doc.line(margin, y + rowH, margin + contentW, y + rowH);
+                y += rowH;
+            };
+
+            // Titre
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(18);
+            doc.setTextColor(33, 128, 209);
+            doc.text('Profil F.O.R.M.E.', pageW / 2, y, { align: 'center' });
+            y += 7;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.setTextColor(136, 136, 136);
+            doc.text(`Généré le ${timestamp}`, pageW / 2, y, { align: 'center' });
+            y += 12;
+
+            // Forces spirituelles
+            const donsPrincipaux = [];
+            Object.keys(formData).forEach(key => {
+                if (key.startsWith('don-') && formData[key] === '3') donsPrincipaux.push(donNames[key]);
+            });
+            addSection('Forces spirituelles');
+            addRow('Dons principaux (3 croix)', donsPrincipaux.join(', ') || 'Aucun');
+
+            // Orientation du coeur
+            const groupesChecked = Array.from(document.querySelectorAll('input[name="groupe"]:checked'))
+                .map(cb => cb.nextElementSibling.textContent);
+            addSection('Orientation du coeur');
+            addRow('Enfance / Adolescence', document.getElementById('coeur-enfance').value);
+            addRow('Entre 20 et 40 ans', document.getElementById('coeur-adulte').value);
+            addRow('Actuellement', document.getElementById('coeur-actuel').value);
+            addRow('Groupes de personnes', groupesChecked.join(', '));
+            addRow("Ministeres qui m'interpellent", document.getElementById('ministeres').value);
+            addRow('Mon reve pour Dieu', document.getElementById('reve').value);
+
+            // Ressources & Competences
+            const competencesChecked = Array.from(document.querySelectorAll('input[name="competence"]:checked'))
+                .map(cb => cb.nextElementSibling.textContent);
+            addSection('Ressources & Competences');
+            addRow('Ministere principal actuel', document.getElementById('ministere-principal').value);
+            addRow("Domaines d'experience", document.getElementById('experience-domaines').value);
+            addRow('Competences developpees', competencesChecked.join(', '));
+            addRow('Meilleur atout', document.getElementById('atout-principal').value);
+
+            // DISC
+            addSection("Maniere d'etre (DISC)");
+            const pdfTopProfiles = (formData.profile || '').split('/').filter(Boolean);
+            pdfTopProfiles.forEach(p => {
+                const d = discDescriptions[p];
+                if (!d) return;
+                addRow('Profil', d.titre);
+                addRow('Traits', d.traits);
+                addRow('Opportunites de croissance', d.opportunites.join(' • '));
+            });
+
+            // Experiences
+            addSection('Experiences');
+            addRow('Ma conversion', document.getElementById('exp-spirituelle').value);
+            addRow('Moments proches de Dieu', document.getElementById('exp-proche').value);
+            addRow('Epreuves surmontees', document.getElementById('exp-epreuves').value);
+            addRow('Matieres preferees', document.getElementById('exp-education').value);
+            addRow('Emplois epanouissants', document.getElementById('exp-travail').value);
+            addRow("Engagement dans l'Eglise", document.getElementById('exp-eglise').value);
+
+            doc.save('Profil-FORME.pdf');
+        }
+
+        function resetForm() {
+            if (!confirm('Réinitialiser le formulaire ? Toutes vos réponses seront effacées.')) return;
+            localStorage.removeItem('forme-ipb');
+            // Vider tous les champs texte et textareas
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+            // Navigation fraîche : contourne la restauration de session du navigateur
+            window.location.replace(window.location.pathname + window.location.search);
+        }
+
+        function submitForm() {
+            localStorage.removeItem('forme-ipb');
+            alert('Merci d\'avoir complété votre profil F.O.R.M.E. ! Vos données ont été sauvegardées.');
+            location.reload();
+        }
+
+        // ── Persistance localStorage ──────────────────────────────────────
+        function saveFormData() {
+            localStorage.setItem('forme-ipb', JSON.stringify(formData));
+        }
+
+        function restoreFormData() {
+            const saved = localStorage.getItem('forme-ipb');
+            if (!saved) return;
+            try { formData = JSON.parse(saved); } catch(e) { return; }
+
+            // 1. Boutons croix (dons spirituels)
+            document.querySelectorAll('.cross-btn').forEach(btn => {
+                const m = (btn.getAttribute('onclick') || '').match(/toggleCross\(this,\s*'([^']+)',\s*'([^']+)'\)/);
+                if (m) {
+                    btn.classList.toggle('active', formData[m[1]] === m[2]);
+                }
+            });
+
+            // 2. Boutons échelle DISC
+            document.querySelectorAll('.scale-option').forEach(btn => {
+                const m = (btn.getAttribute('onclick') || '').match(/selectScale\(this,\s*'([^']+)',\s*(\d+)\)/);
+                if (m) {
+                    btn.classList.toggle('selected', formData[m[1]] === parseInt(m[2]));
+                }
+            });
+
+            // 3. Cases à cocher (groupes & compétences)
+            document.querySelectorAll('input[name="groupe"], input[name="competence"]').forEach(cb => {
+                if (formData['cb_' + cb.id] !== undefined) cb.checked = formData['cb_' + cb.id];
+            });
+
+            // 4. Recalculer les totaux et profil DISC (restaure aussi les boutons D/I/S/C et la description)
+            updateDiscTotals();
+            updateDonsPrincipaux();
+        }
+        // ─────────────────────────────────────────────────────────────────
+
+        showSection(1);
+        restoreFormData();
+
+        // Listeners pour les cases à cocher
+        document.querySelectorAll('input[name="groupe"], input[name="competence"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                formData['cb_' + cb.id] = cb.checked;
+                saveFormData();
+            });
+        });
+    </script>
+</body>
+</html>
