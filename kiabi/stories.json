@@ -1,0 +1,145 @@
+[
+  {
+    "id": "BREK0",
+    "avatarImage": "https://media.kiabi.com/common/alldesign/actutop/2025/hp/FRA-bento-femme.jpg",
+    "profileName": "Chemise",
+    "stories": [
+      {
+        "id": "260603_1014_1",
+        "media": {
+          "type": "image",
+          "title": null,
+          "altText": "",
+          "file": "https://static.kiabi.it/images/sandali-a-doppia-fascia-con-strappo-marrone-fpf10_1_hd1.jpg?width=800",
+          "fallback": null
+        },
+        "products": {
+          "displayType": "fixedPosition",
+          "products": [
+            {
+              "productCodeRef": "FPF10",
+              "position": "bottomTrailing"
+            }
+          ]
+        },
+        "title": null,
+        "subTitle": null,
+        "cta": null
+      }
+    ]
+  },
+  {
+    "id": "PROFILE_1",
+    "avatarImage": "https://static.kiabi.it/images/sacchetto---kitchoun-beige-duu31_1_hd1.jpg?width=500",
+    "profileName": "Kitchoun",
+    "stories": [
+      {
+        "id": "260603_1014_1",
+        "media": {
+          "type": "image",
+          "title": null,
+          "altText": "",
+          "file": "https://static.kiabi.it/images/scarpine-motricita-4-camminare---kitchoun-beige-fum03_4_hd7.jpg?width=800",
+          "fallback": null
+        },
+        "products": {
+          "displayType": "fixedPosition",
+          "products": [
+            {
+              "productCodeRef": "DMT51",
+              "position": "center"
+            }
+          ]
+        },
+        "title": null,
+        "subTitle": null,
+        "cta": null
+      },
+      {
+        "id": "260603_1014_2",
+        "media": {
+          "type": "video",
+          "title": null,
+          "altText": "",
+          "file": "https://raw.githubusercontent.com/gaetanrattin/cec/refs/heads/main/story2.mp4",
+          "fallback": null
+        },
+        "products": {
+          "displayType": "carousel",
+          "products": [
+            {
+              "productCodeRef": "DMT51",
+              "position": null
+            },
+            {
+              "productCodeRef": "DMN77",
+              "position": null
+            },
+            {
+              "productCodeRef": "DML10",
+              "position": null
+            }
+          ]
+        },
+        "title": null,
+        "subTitle": null,
+        "cta": null
+      }
+    ]
+  },
+  {
+    "id": "PROFILE_2",
+    "avatarImage": "https://static.kiabi.com/images/legging-de-sport-taille-twistee---ekstract-vert-eza54_2_hd1.jpg?width=320",
+    "profileName": "Ekstract",
+    "stories": [
+      {
+        "id": "260604_1157_1",
+        "media": {
+          "type": "image",
+          "title": null,
+          "altText": "",
+          "file": "https://static.kiabi.com/images/debardeur-de-sport-fluide---ekstract-bleu-eza26_3_hd1.jpg?width=500",
+          "fallback": null
+        },
+        "products": null,
+        "title": "Découvrez la marque",
+        "subTitle": "Le sport pour les non sportifs",
+        "cta": {
+          "label": "Découvrir",
+          "description": null,
+          "file": {
+            "altText": "",
+            "file": "https://www.kiabi.com/marque/ekstract",
+            "targetBlank": false
+          }
+        }
+      },
+      {
+        "id": "260604_1157_2",
+        "media": {
+          "type": "image",
+          "title": null,
+          "altText": "",
+          "file": "https://static.kiabi.com/images/jogging-de-sport---ekstract-noir-ezb08_3_hd1.jpg?width=800",
+          "fallback": null
+        },
+        "products": {
+          "displayType": "fixedPosition",
+          "products": [
+            {
+              "productCodeRef": "DMT51",
+              "position": "topLeading"
+            },
+            {
+              "productCodeRef": "DMT51",
+              "position": "bottomTrailing"
+            }
+          ]
+        },
+        "title": null,
+        "subTitle": null,
+        "cta": null
+      }
+    ]
+  }
+]
